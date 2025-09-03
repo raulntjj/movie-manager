@@ -4,6 +4,8 @@ namespace movies_api.Models;
 
 public class Movie
 {
+	public int Id { get; set; }
+
 	[Required]
 	[StringLength(30)]
     public required string Title { get; set; }
