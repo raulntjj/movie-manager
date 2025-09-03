@@ -27,7 +27,7 @@ public class MovieController : ControllerBase
 	}
 
 	[HttpGet("pagination")]
-	public IEnumerable<Movie> getMoviesPagination([FromQuery] int skip, [FromQuery] int take)
+	public IEnumerable<Movie> getMoviesPagination([FromQuery] int skip, int take)
 	{
 		return _context.Movies.Skip(skip).Take(take);
 	}
@@ -47,10 +47,23 @@ public class MovieController : ControllerBase
 		Movie movie = _mapper.Map<Movie>(movieDTO);
 		_context.Movies.Add(movie);
 		_context.SaveChanges();
+
 		return CreatedAtAction(
 			nameof(getMovieById),
 			new { id = movie.Id },
 			movie
 		);
+	}
+
+	[HttpPut("{id}")]
+	public IActionResult updateMovie(int id, [FromBody] UpdateMovieDTO movieDTO)
+	{
+		var movie = _context.Movies.FirstOrDefault(movie => movie.Id == id);
+
+		if (movie == null) return NotFound();
+		_mapper.Map(movieDTO, movie);
+		_context.SaveChanges();
+
+		return NoContent();
 	}
 }
