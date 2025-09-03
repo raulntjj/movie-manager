@@ -10,7 +10,7 @@ public class MovieController : ControllerBase
   	private static List<Movie> movies = new List<Movie>();
 
 	[HttpGet]
-	public List<Movie> getMovies()
+	public IEnumerable<Movie> getMovies()
 	{
 		return movies;
 	}
