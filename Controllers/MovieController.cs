@@ -4,7 +4,7 @@ using movies_api.Models;
 namespace movies_api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/movies")]
 public class MovieController : ControllerBase
 {
   	private static List<Movie> movies = new List<Movie>();
@@ -16,16 +16,31 @@ public class MovieController : ControllerBase
 		return movies;
 	}
 
-	[HttpGet("{id}")]
-	public Movie? getMovieById(int id)
+	[HttpGet("pagination")]
+	public IEnumerable<Movie> getMoviesPagination([FromQuery] int skip, [FromQuery] int take)
 	{
-		return movies.FirstOrDefault(filme => filme.Id == id);
+		return movies.Skip(skip).Take(take);
 	}
 
+	[HttpGet("{id}")]
+	public IActionResult getMovieById(int id)
+	{
+		var movie = movies.FirstOrDefault(filme => filme.Id == id);
+		if (movie == null) return NotFound();
+		return Ok(movie);
+	}
+
+
 	[HttpPost]
-	public void AddMovie([FromBody] Movie movie)
+	public IActionResult AddMovie([FromBody] Movie movie)
 	{
 		movie.Id = id++;
 		movies.Add(movie);
+		
+		return CreatedAtAction(
+			nameof(getMovieById),
+			new { id = movie.Id },
+			movie
+		);
 	}
 }
