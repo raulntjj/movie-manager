@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using movies_api.Data;
 using movies_api.Data.DTOs;
@@ -21,15 +22,15 @@ public class MovieController : ControllerBase
 
 
 	[HttpGet]
-	public IEnumerable<Movie> getMovies()
+	public IEnumerable<ReadMovieDTO> getMovies()
 	{
-		return _context.Movies;
+		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies);
 	}
 
 	[HttpGet("pagination")]
-	public IEnumerable<Movie> getMoviesPagination([FromQuery] int skip, int take)
+	public IEnumerable<ReadMovieDTO> getMoviesPagination([FromQuery] int skip, int take)
 	{
-		return _context.Movies.Skip(skip).Take(take);
+		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies.Skip(skip).Take(take));
 	}
 
 	[HttpGet("{id}")]
@@ -37,7 +38,10 @@ public class MovieController : ControllerBase
 	{
 		var movie = _context.Movies.FirstOrDefault(filme => filme.Id == id);
 		if (movie == null) return NotFound();
-		return Ok(movie);
+		
+		var movieDTO = _mapper.Map<ReadMovieDTO>(movie);
+
+		return Ok(movieDTO);
 	}
 
 
@@ -61,9 +65,40 @@ public class MovieController : ControllerBase
 		var movie = _context.Movies.FirstOrDefault(movie => movie.Id == id);
 
 		if (movie == null) return NotFound();
+
 		_mapper.Map(movieDTO, movie);
 		_context.SaveChanges();
 
+		return NoContent();
+	}
+
+	[HttpPatch("{id}")]
+	public IActionResult updatePartialMovie(int id, JsonPatchDocument<UpdateMovieDTO> patch)
+	{
+		var movie = _context.Movies.FirstOrDefault(movie => movie.Id == id);
+
+		if (movie == null) return NotFound();
+
+		var movieAtt = _mapper.Map<UpdateMovieDTO>(movie);
+		patch.ApplyTo(movieAtt, ModelState);
+
+		if (!TryValidateModel(movie)) return ValidationProblem(ModelState);
+
+		_mapper.Map(movieAtt, movie);
+		_context.SaveChanges();
+
+		return NoContent();
+	}
+
+	[HttpDelete("{id}")]
+	public IActionResult deleteMovie(int id)
+	{
+		var movie = _context.Movies.FirstOrDefault(movie => movie.Id == id);
+
+		if (movie == null) return NotFound();
+
+		_context.Remove(movie);
+		_context.SaveChanges();
 		return NoContent();
 	}
 }
