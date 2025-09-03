@@ -1,13 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace movies_api.Models;
+namespace movies_api.Data.DTOs;
 
-public class Movie
+public class CreateMovieDTO
 {
-    [Key]
-    [Required]
-	public int Id { get; set; }
-
 	[Required]
 	[StringLength(30)]
     public required string Title { get; set; }
