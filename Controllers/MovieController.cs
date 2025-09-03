@@ -28,7 +28,7 @@ public class MovieController : ControllerBase
 	}
 
 	[HttpGet("pagination")]
-	public IEnumerable<ReadMovieDTO> getMoviesPagination([FromQuery] int skip, int take)
+	public IEnumerable<ReadMovieDTO> getMoviesPagination([FromQuery] int skip = 0, int take = 50)
 	{
 		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies.Skip(skip).Take(take));
 	}
