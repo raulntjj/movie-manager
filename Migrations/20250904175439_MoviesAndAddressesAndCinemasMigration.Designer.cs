@@ -11,8 +11,8 @@ using movies_api.Data;
 namespace movies_api.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20250903205548_AddCinemaAndAddress")]
-    partial class AddCinemaAndAddress
+    [Migration("20250904175439_MoviesAndAddressesAndCinemasMigration")]
+    partial class MoviesAndAddressesAndCinemasMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace movies_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("movies_api.Models.Cinema", b =>
@@ -64,7 +64,7 @@ namespace movies_api.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.ToTable("Cinema");
+                    b.ToTable("Cinemas");
                 });
 
             modelBuilder.Entity("movies_api.Models.Movie", b =>

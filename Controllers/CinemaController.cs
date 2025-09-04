@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using movies_api.Data;
 using movies_api.Data.DTOs;
 using movies_api.Models;
@@ -23,13 +24,13 @@ public class CinemaController : ControllerBase
 	[HttpGet]
 	public IEnumerable<ReadCinemaDTO> getCinemas()
 	{
-		return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas);
+		return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.ToList());
 	}
 
 	[HttpGet("pagination")]
 	public IEnumerable<ReadCinemaDTO> getCinemasPagination([FromQuery] int skip = 0, int take = 50)
 	{
-		return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.Skip(skip).Take(take));
+		return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.ToList().Skip(skip).Take(take));
 	}
 
 	[HttpGet("{id}")]
@@ -37,7 +38,7 @@ public class CinemaController : ControllerBase
 	{
 		var cinema = _context.Cinemas.FirstOrDefault(filme => filme.Id == id);
 		if (cinema == null) return NotFound();
-		
+
 		var cinemaDTO = _mapper.Map<ReadCinemaDTO>(cinema);
 
 		return Ok(cinemaDTO);

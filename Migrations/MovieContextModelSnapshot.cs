@@ -38,7 +38,7 @@ namespace movies_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("movies_api.Models.Cinema", b =>
@@ -61,7 +61,7 @@ namespace movies_api.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.ToTable("Cinema");
+                    b.ToTable("Cinemas");
                 });
 
             modelBuilder.Entity("movies_api.Models.Movie", b =>

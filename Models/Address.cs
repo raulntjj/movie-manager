@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace movies_api.Models;
 
@@ -15,6 +14,5 @@ public class Address
 	[Range(0, 99999)]
 	public int Number { get; set; }
 
-	[JsonIgnore]
-	public virtual Cinema Cinema { get; set; }
+	public virtual Cinema? Cinema { get; set; }
 }

@@ -6,5 +6,5 @@ public class CreateCinemaDTO
 {
 	[Required]
 	public required string Name { get; set; }
-	public int EnderecoId { get; set; }
+	public int AddressId { get; set; }
 }
