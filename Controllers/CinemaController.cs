@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using movies_api.Data;
 using movies_api.Data.DTOs;
 using movies_api.Models;
@@ -22,19 +21,19 @@ public class CinemaController : ControllerBase
 	}
 
 	[HttpGet]
-	public IEnumerable<ReadCinemaDTO> getCinemas()
+	public IEnumerable<ReadCinemaDTO> GetCinemas()
 	{
 		return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.ToList());
 	}
 
 	[HttpGet("pagination")]
-	public IEnumerable<ReadCinemaDTO> getCinemasPagination([FromQuery] int skip = 0, int take = 50)
+	public IEnumerable<ReadCinemaDTO> GetCinemasPagination([FromQuery] int skip = 0, int take = 50)
 	{
 		return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.ToList().Skip(skip).Take(take));
 	}
 
 	[HttpGet("{id}")]
-	public IActionResult getCinemaById(int id)
+	public IActionResult GetCinemaById(int id)
 	{
 		var cinema = _context.Cinemas.FirstOrDefault(filme => filme.Id == id);
 		if (cinema == null) return NotFound();
@@ -53,14 +52,14 @@ public class CinemaController : ControllerBase
 		_context.SaveChanges();
 
 		return CreatedAtAction(
-			nameof(getCinemaById),
+			nameof(GetCinemaById),
 			new { id = cinema.Id },
 			cinema
 		);
 	}
 
 	[HttpPut("{id}")]
-	public IActionResult updateCinema(int id, [FromBody] UpdateCinemaDTO cinemaDTO)
+	public IActionResult UpdateCinema(int id, [FromBody] UpdateCinemaDTO cinemaDTO)
 	{
 		var cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
 
@@ -73,7 +72,7 @@ public class CinemaController : ControllerBase
 	}
 
 	[HttpPatch("{id}")]
-	public IActionResult updatePartialCinema(int id, JsonPatchDocument<UpdateCinemaDTO> patch)
+	public IActionResult UpdatePartialCinema(int id, JsonPatchDocument<UpdateCinemaDTO> patch)
 	{
 		var cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
 
@@ -91,7 +90,7 @@ public class CinemaController : ControllerBase
 	}
 
 	[HttpDelete("{id}")]
-	public IActionResult deleteCinema(int id)
+	public IActionResult DeleteCinema(int id)
 	{
 		var cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
 

@@ -21,7 +21,7 @@ public class AddressController : ControllerBase
 	}
 
 	[HttpGet]
-	public IEnumerable<ReadAddressDTO> getAddresses()
+	public IEnumerable<ReadAddressDTO> GetAddresses()
 	{
 		return _mapper.Map<List<ReadAddressDTO>>(_context.Addresses);
 	}
@@ -33,7 +33,7 @@ public class AddressController : ControllerBase
 	}
 
 	[HttpGet("{id}")]
-	public IActionResult getAddressById(int id)
+	public IActionResult GetAddressById(int id)
 	{
 		var address = _context.Addresses.FirstOrDefault(filme => filme.Id == id);
 		if (address == null) return NotFound();
@@ -52,14 +52,14 @@ public class AddressController : ControllerBase
 		_context.SaveChanges();
 
 		return CreatedAtAction(
-			nameof(getAddressById),
+			nameof(GetAddressById),
 			new { id = address.Id },
 			address
 		);
 	}
 
 	[HttpPut("{id}")]
-	public IActionResult updateAddress(int id, [FromBody] UpdateAddressDTO addressDTO)
+	public IActionResult UpdateAddress(int id, [FromBody] UpdateAddressDTO addressDTO)
 	{
 		var address = _context.Addresses.FirstOrDefault(address => address.Id == id);
 
@@ -72,7 +72,7 @@ public class AddressController : ControllerBase
 	}
 
 	[HttpPatch("{id}")]
-	public IActionResult updatePartialAddress(int id, JsonPatchDocument<UpdateAddressDTO> patch)
+	public IActionResult UpdatePartialAddress(int id, JsonPatchDocument<UpdateAddressDTO> patch)
 	{
 		var address = _context.Addresses.FirstOrDefault(address => address.Id == id);
 
@@ -90,7 +90,7 @@ public class AddressController : ControllerBase
 	}
 
 	[HttpDelete("{id}")]
-	public IActionResult deleteAddress(int id)
+	public IActionResult DeleteAddress(int id)
 	{
 		var address = _context.Addresses.FirstOrDefault(address => address.Id == id);
 

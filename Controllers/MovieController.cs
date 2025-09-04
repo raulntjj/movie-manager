@@ -22,19 +22,19 @@ public class MovieController : ControllerBase
 
 
 	[HttpGet]
-	public IEnumerable<ReadMovieDTO> getMovies()
+	public IEnumerable<ReadMovieDTO> GetMovies()
 	{
 		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies);
 	}
 
 	[HttpGet("pagination")]
-	public IEnumerable<ReadMovieDTO> getMoviesPagination([FromQuery] int skip = 0, int take = 50)
+	public IEnumerable<ReadMovieDTO> GetMoviesPagination([FromQuery] int skip = 0, int take = 50)
 	{
 		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies.Skip(skip).Take(take));
 	}
 
 	[HttpGet("{id}")]
-	public IActionResult getMovieById(int id)
+	public IActionResult GetMovieById(int id)
 	{
 		var movie = _context.Movies.FirstOrDefault(filme => filme.Id == id);
 		if (movie == null) return NotFound();
@@ -53,14 +53,14 @@ public class MovieController : ControllerBase
 		_context.SaveChanges();
 
 		return CreatedAtAction(
-			nameof(getMovieById),
+			nameof(GetMovieById),
 			new { id = movie.Id },
 			movie
 		);
 	}
 
 	[HttpPut("{id}")]
-	public IActionResult updateMovie(int id, [FromBody] UpdateMovieDTO movieDTO)
+	public IActionResult UpdateMovie(int id, [FromBody] UpdateMovieDTO movieDTO)
 	{
 		var movie = _context.Movies.FirstOrDefault(movie => movie.Id == id);
 
@@ -73,7 +73,7 @@ public class MovieController : ControllerBase
 	}
 
 	[HttpPatch("{id}")]
-	public IActionResult updatePartialMovie(int id, JsonPatchDocument<UpdateMovieDTO> patch)
+	public IActionResult UpdatePartialMovie(int id, JsonPatchDocument<UpdateMovieDTO> patch)
 	{
 		var movie = _context.Movies.FirstOrDefault(movie => movie.Id == id);
 
@@ -91,7 +91,7 @@ public class MovieController : ControllerBase
 	}
 
 	[HttpDelete("{id}")]
-	public IActionResult deleteMovie(int id)
+	public IActionResult DeleteMovie(int id)
 	{
 		var movie = _context.Movies.FirstOrDefault(movie => movie.Id == id);
 
