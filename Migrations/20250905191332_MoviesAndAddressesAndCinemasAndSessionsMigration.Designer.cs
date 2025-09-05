@@ -11,8 +11,8 @@ using movies_api.Data;
 namespace movies_api.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20250904192354_SessionMigration")]
-    partial class SessionMigration
+    [Migration("20250905191332_MoviesAndAddressesAndCinemasAndSessionsMigration")]
+    partial class MoviesAndAddressesAndCinemasAndSessionsMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,13 +98,15 @@ namespace movies_api.Migrations
 
             modelBuilder.Entity("movies_api.Models.Session", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("CinemaId")
+                        .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("MovieId", "CinemaId");
+
+                    b.HasIndex("CinemaId");
 
                     b.ToTable("Sessions");
                 });
@@ -114,15 +116,44 @@ namespace movies_api.Migrations
                     b.HasOne("movies_api.Models.Address", "Address")
                         .WithOne("Cinema")
                         .HasForeignKey("movies_api.Models.Cinema", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("movies_api.Models.Session", b =>
+                {
+                    b.HasOne("movies_api.Models.Cinema", "Cinema")
+                        .WithMany("Sessions")
+                        .HasForeignKey("CinemaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("movies_api.Models.Movie", "Movie")
+                        .WithMany("Sessions")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cinema");
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("movies_api.Models.Address", b =>
                 {
                     b.Navigation("Cinema");
+                });
+
+            modelBuilder.Entity("movies_api.Models.Cinema", b =>
+                {
+                    b.Navigation("Sessions");
+                });
+
+            modelBuilder.Entity("movies_api.Models.Movie", b =>
+                {
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

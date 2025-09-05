@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using movies_api.Data;
 using movies_api.Data.DTOs;
@@ -8,7 +7,7 @@ using movies_api.Models;
 namespace movies_api.Controllers;
 
 [ApiController]
-[Route("api/Sessions")]
+[Route("api/sessions")]
 public class SessionController : ControllerBase
 {
 	private readonly MovieContext _context;
@@ -32,17 +31,16 @@ public class SessionController : ControllerBase
 		return _mapper.Map<List<ReadSessionDTO>>(_context.Sessions.ToList().Skip(skip).Take(take));
 	}
 
-	[HttpGet("{id}")]
-	public IActionResult GetSessionById(int id)
+	[HttpGet("/movies/{movieId}/cinemas/{cinemaId}")]
+	public IActionResult GetSessionById(int movieId, int cinemaId)
 	{
-		var session = _context.Sessions.FirstOrDefault(filme => filme.Id == id);
+		var session = _context.Sessions.FirstOrDefault(session => session.MovieId == movieId && session.CinemaId == cinemaId);
 		if (session == null) return NotFound();
 
 		var SessionDTO = _mapper.Map<ReadSessionDTO>(session);
 
 		return Ok(SessionDTO);
 	}
-
 
 	[HttpPost]
 	public IActionResult AddSession([FromBody] CreateSessionDTO sessionDTO)
@@ -53,28 +51,15 @@ public class SessionController : ControllerBase
 
 		return CreatedAtAction(
 			nameof(GetSessionById),
-			new { id = session.Id },
+			new { movieId = session.MovieId, cinemaId = session.CinemaId },
 			session
 		);
 	}
 
-	[HttpPut("{id}")]
-	public IActionResult UpdateSession(int id, [FromBody] UpdateSessionDTO SessionDTO)
+	[HttpDelete("{movieId}/{cinemaId}")]
+	public IActionResult DeleteSession(int movieId, int cinemaId)
 	{
-		var Session = _context.Sessions.FirstOrDefault(Session => Session.Id == id);
-
-		if (Session == null) return NotFound();
-
-		_mapper.Map(SessionDTO, Session);
-		_context.SaveChanges();
-
-		return NoContent();
-	}
-
-	[HttpDelete("{id}")]
-	public IActionResult DeleteSession(int id)
-	{
-		var session = _context.Sessions.FirstOrDefault(Session => Session.Id == id);
+		var session = _context.Sessions.FirstOrDefault(session => session.MovieId == movieId && session.CinemaId == cinemaId);
 
 		if (session == null) return NotFound();
 

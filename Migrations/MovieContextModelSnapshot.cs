@@ -95,23 +95,15 @@ namespace movies_api.Migrations
 
             modelBuilder.Entity("movies_api.Models.Session", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CinemaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("MovieId", "CinemaId");
 
                     b.HasIndex("CinemaId");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("Sessions");
                 });
@@ -121,7 +113,7 @@ namespace movies_api.Migrations
                     b.HasOne("movies_api.Models.Address", "Address")
                         .WithOne("Cinema")
                         .HasForeignKey("movies_api.Models.Cinema", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -130,7 +122,7 @@ namespace movies_api.Migrations
             modelBuilder.Entity("movies_api.Models.Session", b =>
                 {
                     b.HasOne("movies_api.Models.Cinema", "Cinema")
-                        .WithMany()
+                        .WithMany("Sessions")
                         .HasForeignKey("CinemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -149,6 +141,11 @@ namespace movies_api.Migrations
             modelBuilder.Entity("movies_api.Models.Address", b =>
                 {
                     b.Navigation("Cinema");
+                });
+
+            modelBuilder.Entity("movies_api.Models.Cinema", b =>
+                {
+                    b.Navigation("Sessions");
                 });
 
             modelBuilder.Entity("movies_api.Models.Movie", b =>

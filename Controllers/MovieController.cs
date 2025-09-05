@@ -24,13 +24,13 @@ public class MovieController : ControllerBase
 	[HttpGet]
 	public IEnumerable<ReadMovieDTO> GetMovies()
 	{
-		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies);
+		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies.ToList());
 	}
 
 	[HttpGet("pagination")]
 	public IEnumerable<ReadMovieDTO> GetMoviesPagination([FromQuery] int skip = 0, int take = 50)
 	{
-		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies.Skip(skip).Take(take));
+		return _mapper.Map<List<ReadMovieDTO>>(_context.Movies.ToList().Skip(skip).Take(take));
 	}
 
 	[HttpGet("{id}")]

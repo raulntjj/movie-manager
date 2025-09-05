@@ -13,6 +13,7 @@ public class MovieProfile : Profile
 		CreateMap<Movie, UpdateMovieDTO>();
 		CreateMap<Movie, ReadMovieDTO>()
 			.ForMember(movieDTO => movieDTO.Sessions,
-					opt => opt.MapFrom(movie => movie.Sessions));
+					opt => opt.MapFrom(movie => movie.Sessions)
+		);
 	}
 }
